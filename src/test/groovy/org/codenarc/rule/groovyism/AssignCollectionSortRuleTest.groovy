@@ -128,6 +128,24 @@ class AssignCollectionSortRuleTest extends AbstractRuleTestCase {
         assertSingleViolation(SOURCE, 2, 'def x = myList.sort().findAll { x < 1 }')
     }
 
+    @Test
+    void testMapSort() {
+        final SOURCE = '''
+        Map myMap = [:]
+        Map m = myMap.sort()
+        '''
+        assertNoViolations(SOURCE)
+    }
+
+    @Test
+    void testSetSort() {
+        final SOURCE = '''
+        Set mySet = []
+        Set s = mySet.sort()
+        '''
+        assertNoViolations(SOURCE)
+    }
+
     protected Rule createRule() {
         new AssignCollectionSortRule()
     }

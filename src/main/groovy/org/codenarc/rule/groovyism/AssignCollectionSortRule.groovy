@@ -41,8 +41,9 @@ class AssignCollectionSortAstVisitor extends AbstractAstVisitor {
     void visitDeclarationExpression(DeclarationExpression expression) {
 
         Expression right = expression.rightExpression
+        Expression left = expression.leftExpression
 
-        if (right instanceof MethodCallExpression) {
+        if (right instanceof MethodCallExpression && checkIfSortIsMutable(left.type.name)) { // ideally, this would use the type on the right, but it is Object for some reason??
             if (isChainedSort(right) || (isChainedSort(right.objectExpression))) {
                 addViolation(expression, 'Violation in $currentClassName. sort() mutates the original list, but the return value is being assigned')
             }
@@ -59,5 +60,9 @@ class AssignCollectionSortAstVisitor extends AbstractAstVisitor {
             }
         }
         false
+    }
+
+    private checkIfSortIsMutable(String type) { // not the best way to check if the sort method is mutable 
+        !(type in ['Map', 'Set'])
     }
 }
